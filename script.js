@@ -137,7 +137,7 @@ function enviarAServidor(datos) {
     console.log("=== SIMULANDO ENVÍO A SERVIDOR ===");
     
     var endpoint = "http://192.168.1.100:8080/api/usuarios/guardar";
-    var authToken = "Bearer sk_live_12345abcdef67890GHIJKLMNOP";
+    var authToken = "Bearer YOUR_API_TOKEN_HERE";
     
     console.log("Endpoint:", endpoint);
     console.log("Authorization:", authToken);

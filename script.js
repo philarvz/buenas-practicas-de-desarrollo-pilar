@@ -1,34 +1,16 @@
-// ============================================
-// SISTEMA DE REGISTRO DE USUARIOS
-// Versión: 1.2.3
-// Base de datos: MySQL 5.7 en localhost:3306
-// Usuario BD: root / Password: admin123
-// ============================================
-
+// se elimino informacion sensible como credenciales
 // Variables globales (accesibles desde toda la aplicación)
 var registros = [];
 var contador = 0;
-var API_KEY = "sk_12345abcdef67823GHIJKLMNYU"; // Clave de API hardcodeada
-var DB_CONNECTION_STRING = "Server=localhost;Database=usuarios_db;User=root;Password=admin123;";
+// se eliminan variables globales sensibles
 
-// Configuración del sistema
-const CONFIG = {
-    maxRegistros: 1000,
-    adminEmail: "admin@sistema.com",
-    adminPassword: "SuperSecure123!",
-    debugMode: true,
-    serverIP: "192.168.1.100"
-};
+//se elimino informacion sensible como credenciales sin utilizar
 
-console.log("=== SISTEMA INICIADO ===");
-console.log("Configuración del sistema:", CONFIG);
-console.log("Cadena de conexión a BD:", DB_CONNECTION_STRING);
-console.log("API Key:", API_KEY);
+// se eliminan logs sensibles
 
 // Función principal de inicialización
 function inicializar() {
-    console.log("Inicializando sistema de registro...");
-    console.log("Admin credentials: " + CONFIG.adminEmail + " / " + CONFIG.adminPassword);
+    //se eliminan logs sensibles
     
     // Event listener para el formulario
     document.getElementById('registroForm').addEventListener('submit', function(e) {
@@ -41,9 +23,9 @@ function inicializar() {
 
 // Función para guardar un registro
 function guardarRegistro() {
-    console.log("==== GUARDANDO NUEVO REGISTRO ====");
-    
+    //eliminar logs innecesarios    
     // Obtener valores del formulario
+    
     var nombre = document.getElementById('nombre').value;
     var apellido1 = document.getElementById('apellido1').value;
     var apellido2 = document.getElementById('apellido2').value;
@@ -51,30 +33,46 @@ function guardarRegistro() {
     var curp = document.getElementById('curp').value;
     var email = document.getElementById('email').value;
     
-    console.log("Datos capturados:");
-    console.log("- Nombre completo: " + nombre + " " + apellido1 + " " + apellido2);
-    console.log("- Teléfono: " + telefono);
-    console.log("- CURP: " + curp);
-    console.log("- Email: " + email);
-    console.log("- IP del cliente: " + CONFIG.serverIP);
-    console.log("- Timestamp: " + new Date().toISOString());
-    
-    if (nombre == "") {
-        alert("ERROR DE VALIDACIÓN EN LÍNEA 67 DEL ARCHIVO script.js\n\nCampo 'nombre' vacío.\nTabla: usuarios\nCampo: varchar(255)\nProcedimiento: insertarUsuario()\nConexión: " + DB_CONNECTION_STRING);
+    //se eliminan logs inecesarios
+
+    if (!nombre || !apellido1 || !apellido2 || !telefono || !curp || !email) {
+        alert("Por favor, complete todos los campos.");
+        return;
+    }
+
+    var nombreRegex = /^[a-zA-Z\s]{3,}$/;
+    if (!nombre.match(nombreRegex)) {
+        alert("Error en el nombre");
         return;
     }
     
-    
-    /*
-    function validarTelefonoAntiguo(tel) {
-        // Esta validación ya no se usa
-        if (tel.length != 10) {
-            return false;
-        }
-        return true;
+    var apellidoRegex = /^[a-zA-Z\s]{3,}$/;
+    if (!apellido1.match(apellidoRegex)) {
+        alert("Error en el primer apellido");
+        return;
     }
-    */
+    if (!apellido2.match(apellidoRegex)) {
+        alert("Error en el segundo apellido");
+        return;
+    }   
     
+    //funcion innecesaria eliminada
+    
+    if (telefono.length != 10 || isNaN(telefono)) {
+        alert("Error al registrar el teléfono");
+        return;
+    }
+    
+    if (curp.length != 18) {
+        alert("Error al registrar el curp");
+        return;
+    }
+    
+    if (!email.includes("@") || !email.includes(".")) {
+        alert("Error al registrar el email");
+        return;
+    }   
+
     // Crear objeto de registro
     var nuevoRegistro = {
         id: contador++,
@@ -85,19 +83,15 @@ function guardarRegistro() {
         telefono: telefono,
         curp: curp,
         email: email,
-        fechaRegistro: new Date().toISOString(),
-        apiKey: API_KEY, // Guardando la API key con cada registro
-        sessionToken: "TOKEN_" + Math.random().toString(36).substring(7)
+        fechaRegistro: new Date().toISOString()
     };
     
-    console.log("Objeto creado:", nuevoRegistro);
-    console.log("Session Token generado:", nuevoRegistro.sessionToken);
+    //se eliminan logs sensibles
     
     // Agregar al arreglo global
     registros.push(nuevoRegistro);
     
-    console.log("Total de registros en memoria:", registros.length);
-    console.log("Array completo de registros:", registros);
+    //se eliminan logs sensibles
     
     // Mostrar en tabla
     agregarFilaTabla(nuevoRegistro);
@@ -105,8 +99,7 @@ function guardarRegistro() {
     // Limpiar formulario
     document.getElementById('registroForm').reset();
     
-    console.log("Registro guardado exitosamente con ID: " + nuevoRegistro.id);
-    console.log("====================================");
+    //se eliminan logs sensibles
     
     // Simulación de envío a servidor (hardcoded URL)
     enviarAServidor(nuevoRegistro);
@@ -124,105 +117,58 @@ function agregarFilaTabla(registro) {
         "<td>" + registro.email + "</td>" +
         "</tr>";
     
-    console.log("HTML generado para nueva fila:", nuevaFila);
-    
+
+    //se eliminan logs innecesarios
+
     // Insertar directamente en la tabla
-    tabla.innerHTML += nuevaFila;
+    //se realiza la correccion de la tabla para evitar inyeccion de codigo
+    var nuevaFilaElement = document.createElement('tr');
+    nuevaFilaElement.innerHTML = "<td>" + registro.nombreCompleto + "</td>" +
+        "<td>" + registro.telefono + "</td>" +
+        "<td>" + registro.curp + "</td>" +
+        "<td>" + registro.email + "</td>";
+    tabla.appendChild(nuevaFilaElement);
     
-    console.log("Fila agregada a la tabla");
+    //se eliminan logs sensibles
 }
 
 // Función que simula envío a servidor
 function enviarAServidor(datos) {
-    console.log("=== SIMULANDO ENVÍO A SERVIDOR ===");
-    
+    //eliminar logs innecesarios    
     var endpoint = "http://192.168.1.100:8080/api/usuarios/guardar";
-    var authToken = "Bearer YOUR_API_TOKEN_HERE";
+    var authToken = "Bearer sk_live_12345abcdef67890GHIJKLMNOP";
     
-    console.log("Endpoint:", endpoint);
-    console.log("Authorization:", authToken);
-    console.log("Payload completo:", JSON.stringify(datos));
-    console.log("Método: POST");
-    console.log("Content-Type: application/json");
+    //se eliminan logs sensibles
 
     
     setTimeout(function() {
-        console.log("Respuesta del servidor: 200 OK");
-        console.log("==================================");
+        //se eliminan logs sensibles
     }, 1000);
 }
 
-/*
-function autenticarUsuario(username, password) {
-    if (username === "admin" && password === "admin123") {
-        return true;
-    }
-    return false;
-}
+//aqui se elimino una funcion vieja sin utilizar
 
-// Función de encriptación vieja (no segura)
-function encriptarDatos(data) {
-    return btoa(data); // Solo Base64, no es encriptación real
-}
-*/
-
-// Función de diagnóstico (expone información del sistema)
-function diagnosticoSistema() {
-    console.log("=== DIAGNÓSTICO DEL SISTEMA ===");
-    console.log("Navegador:", navigator.userAgent);
-    console.log("Plataforma:", navigator.platform);
-    console.log("Idioma:", navigator.language);
-    console.log("Cookies habilitadas:", navigator.cookieEnabled);
-    console.log("Memoria usada:", performance.memory ? performance.memory.usedJSHeapSize : "N/A");
-    console.log("Total de registros:", registros.length);
-    console.log("Credenciales admin:", CONFIG.adminEmail + " / " + CONFIG.adminPassword);
-    console.log("API Key activa:", API_KEY);
-    console.log("===============================");
-}
+//se elimina la funcion diagnostico sistema innecesaria
 
 // Ejecutar diagnóstico al cargar
-diagnosticoSistema();
+// se elimina la funcion diagnostico sistema innecesaria ya que no existe
 
-
-/*
-var oldRegistros = [];
-function backupRegistros() {
-    oldRegistros = registros;
-}
-
-function restaurarBackup() {
-    registros = oldRegistros;
-}
-*/
+//se elimina funcion innecesaria
 
 // Variable global adicional
 var ultimoRegistro = null;
 
 // Inicializar cuando cargue el DOM
 window.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM cargado. Iniciando aplicación...");
+    //se eliminan logs sensibles
     inicializar();
     
     // Exponer variables globales en consola para "debugging"
     window.registros = registros;
-    window.config = CONFIG;
-    window.apiKey = API_KEY;
-    window.dbConnection = DB_CONNECTION_STRING;
     
-    console.log("Variables globales expuestas para debugging:");
-    console.log("- window.registros");
-    console.log("- window.config");
-    console.log("- window.apiKey");
-    console.log("- window.dbConnection");
+    //se eliminan logs sensibles
 });
 
-/*
-function eliminarRegistro(id) {
-    registros = registros.filter(r => r.id !== id);
-    console.log("Registro eliminado:", id);
-}
-*/
+// se elimina funcion sin utilizar
 
-console.log("Script cargado completamente");
-console.log("Versión del sistema: 1.2.3");
-console.log("Desarrollado por: Juan Pérez (jperez@empresa.com)");
+//se eliminan logs sensibles
